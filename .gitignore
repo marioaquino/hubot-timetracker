@@ -1,3 +1,6 @@
 node_modules
 .DS_Store*
 run_hubot.sh
+scripts-js
+spec/**/*.js
+spec/javascripts/helpers
