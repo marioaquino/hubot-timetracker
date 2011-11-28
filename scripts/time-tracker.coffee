@@ -24,9 +24,27 @@ class Effort
   constructor: (@name, @id) ->
 
   duration: ->
+    hours = @getHours()
+    minutes = @getMinutes()
+    hours_text = if hours.length == 0 then '' else "#{hours} and "
+    "#{hours_text}#{minutes}"
+
+  getHours: ->
+    return "" unless @startTime?()
+    elapsed = @endTime().getHours() - @startTime().getHours()
+    return "" unless (elapsed > 0)
+    "#{@formatTime(elapsed, 'hour')}"
+
+  formatTime: (elapsed, label) ->
+    "#{elapsed} #{label}#{@pluralize(elapsed)}"
+
+  getMinutes: ->
     elapsed = 0 unless @startTime?()
     elapsed ?= @endTime().getMinutes() - @startTime().getMinutes()
-    "#{elapsed} minute#{if elapsed == 1 then '' else 's'}#{if @isRunning() then ' (*)' else ''}"
+    "#{@formatTime(elapsed, 'minute')}#{if @isRunning() then ' (*)' else ''}"
+
+  pluralize: (elapsedTime) ->
+    if elapsedTime == 1 then '' else 's'
 
   start: -> @starting = new Date()
 

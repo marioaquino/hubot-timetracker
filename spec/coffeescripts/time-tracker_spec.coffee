@@ -32,4 +32,21 @@ describe 'Effort', ->
       @effort.stop()
       expect(@effort.duration()).toEqual '1 minute'
 
+  describe 'duration reporting', ->
+    beforeEach ->
+      @effort.start()
+      startTime = new Date
+      startTime.setHours(2)
+      startTime.setMinutes(0)
+      endTime = new Date(startTime)
+      endTime.setHours(4)
+      endTime.setMinutes(45)
+      spyOn(@effort, 'startTime').andReturn(startTime)
+      spyOn(@effort, 'endTime').andReturn(endTime)
+
+    it 'displays multi-hour durations', ->
+      @effort.stop()
+      expect(@effort.duration()).toEqual '2 hours and 45 minutes'
+
+
 
