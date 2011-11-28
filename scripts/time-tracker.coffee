@@ -24,7 +24,7 @@ class Effort
   constructor: (@name, @id) ->
 
   duration: ->
-    elapsed = 0 unless @starting?
+    elapsed = 0 unless @startTime?()
     elapsed ?= @endTime().getMinutes() - @startTime().getMinutes()
     "#{elapsed} minute#{if elapsed == 1 then '' else 's'}#{if @isRunning() then ' (*)' else ''}"
 
