@@ -1,11 +1,14 @@
 describe 'Effort', ->
   beforeEach ->
-    @effort = new Effort('mario')
+    @effort = new Effort('mario', '1234')
 
   describe 'initially', ->
 
-    it 'has an involved list', ->
-      expect(@effort.name).toEqual ['mario']
+    it 'has an involved person', ->
+      expect(@effort.name).toEqual 'mario'
+
+    it 'has an identifier', ->
+      expect(@effort.id).toEqual '1234'
 
     it 'has an initial duration of zero', ->
       expect(@effort.duration()).toEqual '0 minutes'
@@ -21,6 +24,9 @@ describe 'Effort', ->
 
     it 'reports the elapsed duration relative to the start date', ->
       expect(@effort.duration()).toEqual '1 minute (*)'
+
+    it 'indicates if the effort is running', ->
+      expect(@effort.isRunning()).toEqual true
 
     it 'reports its final duration once stopped', ->
       @effort.stop()
