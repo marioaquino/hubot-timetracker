@@ -2,7 +2,7 @@ describe 'Effort', ->
   beforeEach ->
     @effort = new Effort('mario', '1234')
 
-  describe 'initially', ->
+  context 'initially', ->
 
     it 'has an involved person', ->
       expect(@effort.name).toEqual 'mario'
@@ -13,7 +13,7 @@ describe 'Effort', ->
     it 'has an initial duration of zero', ->
       expect(@effort.duration()).toEqual '0 minutes'
 
-  describe 'when tracking', ->
+  context 'when tracking', ->
     beforeEach ->
       @effort.start()
       currentTime = new Date
@@ -32,7 +32,7 @@ describe 'Effort', ->
       @effort.stop()
       expect(@effort.duration()).toEqual '1 minute'
 
-  describe 'duration reporting', ->
+  context 'duration reporting', ->
     beforeEach ->
       @effort.start()
       startTime = new Date
@@ -49,4 +49,20 @@ describe 'Effort', ->
       expect(@effort.duration()).toEqual '2 hours and 45 minutes'
 
 
+describe 'Timesheets', ->
+  beforeEach ->
+    mockRobot =
+      onCache: []
+      brain:
+        on: (eventName, callback) ->
+          mockRobot.onCache.push eventName
+    @mockRobot = mockRobot
+    @timesheets = new Timesheets(mockRobot)
 
+  context 'during initialization', ->
+    it 'registers with an on-load event handler', ->
+      expect(@mockRobot.onCache[0]).toEqual 'loaded'
+
+  context 'when no efforts are recorded', ->
+    it 'says it has no time recorded for you', ->
+      expect(@timesheets.retrieve('mario')).toEqual 'I have no timesheet recorded for mario'

@@ -6,16 +6,17 @@
 # reset my timesheet - Clear all entries from my timesheet
 
 class Timesheets
-  constructor: (@robot) ->
+  constructor: (robot) ->
     @cache = []
 
-    @robot.brain.on 'loaded', =>
+    robot.brain.on 'loaded', =>
       if @robot.brain.data.timesheets
         @cache = @robot.brain.data.timesheets
 
   add: (effort) ->
 
   retrieve: (name) ->
+    "I have no timesheet recorded for #{name}"
 
   clearFor: (name) ->
 
