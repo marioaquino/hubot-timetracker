@@ -1,6 +1,6 @@
 # Track time spent on stories by devs
 #
-# i am starting on <story number> - Start a timer for the given effort
+# i am starting <story number> - Start a timer for the given effort
 # i am done with <story number> - Stop timer for the given effort
 # show my timesheet - Display the time hubot has accumulated for you
 # reset my timesheet - Clear all entries from my timesheet
@@ -64,11 +64,11 @@ class Effort
   robot.respond /show my time(sheet)?/i, (msg) ->
     msg.send new Effort(msg.message.user).duration()
 
-  robot.respond /i am starting on (\d+)/i, (msg) ->
+  robot.respond /i am starting (.*)/i, (msg) ->
 
     #msg.message.user.
 
-  robot.respond /i am done with (\d+)/i, (msg) ->
+  robot.respond /i am done with (.*)/i, (msg) ->
 
 (exports ? this).Effort = Effort
 (exports ? this).Timesheets = Timesheets
