@@ -55,7 +55,7 @@ class Effort
 
   startTime: -> @starting
 
-  isRunning: -> @starting? and  not @ending?
+  isRunning: -> @starting? and not @ending?
 
 
 (module ?= {}).exports = (robot) ->
