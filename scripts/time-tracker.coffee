@@ -6,10 +6,11 @@
 # reset my timesheet - Clear all entries from my timesheet
 
 class Timesheets
-  constructor: (robot) ->
-    @cache = []
+  #TODO: Is it necessary to hold on to @robot?
+  constructor: (@robot) ->
+    @cache = {}
 
-    robot.brain.on 'loaded', =>
+    @robot.brain.on 'loaded', =>
       if @robot.brain.data.timesheets
         @cache = @robot.brain.data.timesheets
 
@@ -56,6 +57,8 @@ class Effort
   startTime: -> @starting
 
   isRunning: -> @starting? and not @ending?
+
+  summary: -> "#{@startTime().toDateString()}: #{@id} - #{@duration()}"
 
 
 (module ?= {}).exports = (robot) ->

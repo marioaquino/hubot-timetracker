@@ -48,16 +48,23 @@ describe 'Effort', ->
       @effort.stop()
       expect(@effort.duration()).toEqual '2 hours and 45 minutes'
 
+  context 'summary', ->
+    beforeEach ->
+      spyOn(@effort, 'startTime').andReturn(new Date('1/1/2011'))
+      spyOn(@effort, 'duration').andReturn('1 hour')
+
+    it 'includes the date of effort, the identifier, and the duration', ->
+      expect(@effort.summary()).toEqual('Sat Jan 01 2011: 1234 - 1 hour')
+
 
 describe 'Timesheets', ->
   beforeEach ->
-    mockRobot =
+    @mockRobot =
       onCache: []
       brain:
-        on: (eventName, callback) ->
-          mockRobot.onCache.push eventName
-    @mockRobot = mockRobot
-    @timesheets = new Timesheets(mockRobot)
+        on: (eventName, callback) =>
+          @mockRobot.onCache.push eventName
+    @timesheets = new Timesheets(@mockRobot)
 
   context 'during initialization', ->
     it 'registers with an on-load event handler', ->
@@ -66,3 +73,5 @@ describe 'Timesheets', ->
   context 'when no efforts are recorded', ->
     it 'says it has no time recorded for you', ->
       expect(@timesheets.retrieve('mario')).toEqual 'I have no timesheet recorded for mario'
+
+
