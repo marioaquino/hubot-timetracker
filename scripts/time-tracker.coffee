@@ -71,12 +71,14 @@ class Effort
   timesheets = new Timesheets robot
 
   robot.respond /show my time(sheet)?/i, (msg) ->
-    #msg.send new Effort(msg.message.user).duration()
+    msg.send timesheets.retrieve(msg.message.user.id)
 
-  robot.respond /i am starting (.*)/i, (msg, effort_id) ->
-    #timesheets.add new Effort(msg.message.user, effort_id)
+  robot.respond /i'm starting (.*)/i, (msg) ->
+    effort_id = msg.match[1]
+    timesheets.add new Effort(msg.message.user.id, effort_id)
+    msg.send "OK, I will track how long you're working on #{effort_id}"
 
-  robot.respond /i am done with (.*)/i, (msg) ->
+  robot.respond /i'm done with (.*)/i, (msg) ->
 
 (exports ? this).Effort = Effort
 (exports ? this).Timesheets = Timesheets
