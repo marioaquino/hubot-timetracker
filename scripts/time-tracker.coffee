@@ -16,6 +16,7 @@ class Timesheets
 
   add: (effort) ->
     (@cache[effort.participant] ||= []).push effort
+    effort.start()
 
   retrieve: (participant) ->
     return "I have no timesheet recorded for #{participant}" unless @cache[participant]
@@ -70,11 +71,10 @@ class Effort
   timesheets = new Timesheets robot
 
   robot.respond /show my time(sheet)?/i, (msg) ->
-    msg.send new Effort(msg.message.user).duration()
+    #msg.send new Effort(msg.message.user).duration()
 
-  robot.respond /i am starting (.*)/i, (msg) ->
-
-    #msg.message.user.
+  robot.respond /i am starting (.*)/i, (msg, effort_id) ->
+    #timesheets.add new Effort(msg.message.user, effort_id)
 
   robot.respond /i am done with (.*)/i, (msg) ->
 

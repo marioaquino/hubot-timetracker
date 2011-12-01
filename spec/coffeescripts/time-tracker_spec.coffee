@@ -74,10 +74,24 @@ describe 'Timesheets', ->
     it 'says it has no time recorded for you', ->
       expect(@timesheets.retrieve('mario')).toEqual 'I have no timesheet recorded for mario'
 
+  context 'adding efforts', ->
+    it 'starts the effort', ->
+      effort = { participant: 'mario', id: '1234', start: ->}
+      spyOn(effort, 'start')
+      @timesheets.add effort
+      expect(effort.start).toHaveBeenCalled()
+
   context 'when efforts are recorded', ->
     beforeEach ->
-      @timesheets.add { participant: 'mario', summary: -> 'Sat Jan 01 2011: 12345 - 2 hours and 30 minutes'}
-      @timesheets.add { participant: 'mario', summary: -> 'Sat Jan 01 2011: 54321 - 1 hour'}
+      @timesheets.add
+        participant: 'mario'
+        summary: -> 'Sat Jan 01 2011: 12345 - 2 hours and 30 minutes'
+        start: ->
+
+      @timesheets.add
+        participant: 'mario'
+        summary: -> 'Sat Jan 01 2011: 54321 - 1 hour'
+        start: ->
 
     it 'includes them in the timesheet', ->
       expect(@timesheets.retrieve('mario')).toEqual '''Tracked time for mario:
