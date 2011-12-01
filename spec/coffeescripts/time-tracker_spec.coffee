@@ -5,7 +5,7 @@ describe 'Effort', ->
   context 'initially', ->
 
     it 'has an involved person', ->
-      expect(@effort.name).toEqual 'mario'
+      expect(@effort.participant).toEqual 'mario'
 
     it 'has an identifier', ->
       expect(@effort.id).toEqual '1234'
@@ -62,8 +62,8 @@ describe 'Timesheets', ->
     @mockRobot =
       onCache: []
       brain:
-        on: (eventName, callback) =>
-          @mockRobot.onCache.push eventName
+        on: (eventparticipant, callback) =>
+          @mockRobot.onCache.push eventparticipant
     @timesheets = new Timesheets(@mockRobot)
 
   context 'during initialization', ->
@@ -73,5 +73,15 @@ describe 'Timesheets', ->
   context 'when no efforts are recorded', ->
     it 'says it has no time recorded for you', ->
       expect(@timesheets.retrieve('mario')).toEqual 'I have no timesheet recorded for mario'
+
+  context 'when efforts are recorded', ->
+    beforeEach ->
+      @timesheets.add { participant: 'mario', summary: -> 'Sat Jan 01 2011: 12345 - 2 hours and 30 minutes'}
+      @timesheets.add { participant: 'mario', summary: -> 'Sat Jan 01 2011: 54321 - 1 hour'}
+
+    it 'includes them in the timesheet', ->
+      expect(@timesheets.retrieve('mario')).toEqual '''Tracked time for mario:
+        Sat Jan 01 2011: 12345 - 2 hours and 30 minutes
+        Sat Jan 01 2011: 54321 - 1 hour'''
 
 

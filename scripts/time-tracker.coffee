@@ -15,15 +15,19 @@ class Timesheets
         @cache = @robot.brain.data.timesheets
 
   add: (effort) ->
+    (@cache[effort.participant] ||= []).push effort
 
-  retrieve: (name) ->
-    "I have no timesheet recorded for #{name}"
+  retrieve: (participant) ->
+    return "I have no timesheet recorded for #{participant}" unless @cache[participant]
+    """Tracked time for #{participant}:
+      #{(effort.summary() for effort in @cache[participant]).join '\n'}
+    """
 
-  clearFor: (name) ->
+  clearFor: (participant) ->
 
 
 class Effort
-  constructor: (@name, @id) ->
+  constructor: (@participant, @id) ->
 
   duration: ->
     hours = @getHours()
