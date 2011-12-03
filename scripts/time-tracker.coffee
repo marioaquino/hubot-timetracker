@@ -1,7 +1,7 @@
 # Track time spent on stories by devs
 #
-# i am starting <story number> - Start a timer for the given effort
-# i am done with <story number> - Stop timer for the given effort
+# i'm starting <story number> - Start a timer for the given effort
+# i'm done with <story number> - Stop timer for the given effort
 # show my timesheet - Display the time hubot has accumulated for you
 # reset my timesheet - Clear all entries from my timesheet
 
