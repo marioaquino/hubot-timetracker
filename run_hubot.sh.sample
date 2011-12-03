@@ -8,5 +8,6 @@ export HUBOT_XMPP_PORT="5222"
 export HUBOT_MEMEGEN_USERNAME=""
 export HUBOT_MEMEGEN_PASSWORD=""
 export HUBOT_WOLFRAM_APPID=""
+export NODE_PATH=""
 
 bin/hubot -a xmpp
