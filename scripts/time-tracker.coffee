@@ -17,6 +17,7 @@ class Timesheets
   add: (effort) ->
     (@cache[effort.participant] ||= []).push effort
     effort.start()
+    @robot.brain.data.timesheets = @cache
 
   retrieve: (participant) ->
     return "I have no timesheet recorded for #{participant}" unless @cache[participant]
