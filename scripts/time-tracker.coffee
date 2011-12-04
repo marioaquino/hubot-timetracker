@@ -6,13 +6,20 @@
 # reset my timesheet - Clear all entries from my timesheet
 
 class Timesheets
-  #TODO: Is it necessary to hold on to @robot?
   constructor: (@robot) ->
     @cache = {}
 
     @robot.brain.on 'loaded', =>
-      if @robot.brain.data.timesheets
-        @cache = @robot.brain.data.timesheets
+      if (cachedTimesheets = @robot.brain.data.timesheets)
+        console.log "Reloading #{Object.keys(cachedTimesheets).length} previously cached timesheet(s)..."
+        for key of cachedTimesheets
+          @cache[key] = (Timesheets.buildEffort(cachedEffort) for cachedEffort in cachedTimesheets[key])
+
+  @buildEffort: (cachedEffort) ->
+    effort = new Effort(cachedEffort.participant, cachedEffort.id)
+    effort.starting = new Date(cachedEffort.starting)
+    effort.ending = new Date(cachedEffort.ending) if cachedEffort.ending?
+    effort
 
   add: (effort) ->
     (@cache[effort.participant] ||= []).push effort
@@ -54,9 +61,9 @@ class Effort
   pluralize: (elapsedTime) ->
     if elapsedTime == 1 then '' else 's'
 
-  start: -> @starting = new Date()
+  start: -> @starting = new Date
 
-  stop: -> @ending = new Date()
+  stop: -> @ending = new Date
 
   endTime: -> @ending or new Date
 
