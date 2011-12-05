@@ -7,8 +7,8 @@ guard 'coffeescript', :output => 'spec/javascripts' do
   watch /^spec\/coffeescripts\/helpers\/(.*)\.coffee$/
 end
 
-guard 'livereload' do
-  watch /^spec\/javascripts\/.+\.js$/
-  watch /^scripts-js\/.+\.js$/
-end
+#guard 'livereload' do
+#  watch /^spec\/javascripts\/.+\.js$/
+#  watch /^scripts-js\/.+\.js$/
+#end
 
