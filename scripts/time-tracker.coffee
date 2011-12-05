@@ -3,7 +3,7 @@
 # i'm starting <story number> - Start a timer for the given effort
 # i'm done with <story number> - Stop timer for the given effort
 # show my timesheet - Display the time hubot has accumulated for you
-# reset my timesheet - Clear all entries from my timesheet
+# reset my timesheet - Clear all entries from my timesheet (may also say 'clear my timesheet')
 
 class Timesheets
   constructor: (@robot) ->
@@ -33,7 +33,7 @@ class Timesheets
     """
 
   clearFor: (participant) ->
-
+    delete @cache[participant]
 
 class Effort
   constructor: (@participant, @id) ->
@@ -87,6 +87,10 @@ class Effort
     msg.send "OK, I will track how long you're working on #{effort_id}"
 
   robot.respond /i'm done with (.*)/i, (msg) ->
+
+  robot.respond /(clear|reset) my time(sheet)?/i, (msg) ->
+    timesheets.clearFor(msg.message.user.id)
+    msg.send "OK #{msg.message.user.id}, your timesheet is now reset"
 
 (exports ? this).Effort = Effort
 (exports ? this).Timesheets = Timesheets

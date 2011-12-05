@@ -74,6 +74,10 @@ describe 'Timesheets', ->
     it 'says it has no time recorded for you', ->
       expect(@timesheets.retrieve('mario')).toEqual 'I have no timesheet recorded for mario'
 
+    it 'clearing the timesheet has no effect', ->
+      @timesheets.clearFor('mario')
+      expect(@timesheets.retrieve('mario')).toEqual 'I have no timesheet recorded for mario'
+
   context 'adding efforts', ->
     beforeEach ->
       @effort = { participant: 'mario', id: '1234', start: ->}
@@ -110,5 +114,16 @@ describe 'Timesheets', ->
       expect(@timesheets.retrieve('mario')).toEqual '''Tracked time for mario:
         Sat Jan 01 2011: 12345 - 2 hours and 30 minutes
         Sat Jan 01 2011: 54321 - 1 hour'''
+
+    context 'clearing the timesheet', ->
+      beforeEach ->
+        @timesheets.clearFor('mario')
+
+      it 'removes all efforts for a given participant', ->
+        expect(@timesheets.retrieve('mario')).toEqual 'I have no timesheet recorded for mario'
+
+      it 'updates the robot brain', ->
+        expect(@mockRobot.brain.data.timesheets).toBe(@timesheets.cache)
+
 
 
