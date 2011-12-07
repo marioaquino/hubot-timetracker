@@ -99,10 +99,14 @@ describe 'Timesheets', ->
       @effort = { participant: 'mario', id: '1234', stop: ->}
       spyOn(@effort, 'stop')
       @timesheets.cache['mario'] = {'1234':  @effort }
-      @timesheets.stopEffort 'mario', '1234'
+      @returnValue = @timesheets.stopEffort 'mario', '1234'
 
     it 'stops a running effort', ->
       expect(@effort.stop).toHaveBeenCalled()
+
+    it 'tells you the effort has been stopped', ->
+      expect(@returnValue).toEqual('Hey everybody! mario stopped working on 1234')
+
 
   context 'when efforts are recorded', ->
     beforeEach ->

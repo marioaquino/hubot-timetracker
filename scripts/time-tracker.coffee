@@ -28,6 +28,7 @@ class Timesheets
 
   stopEffort: (participant, id) ->
     @cache[participant][id].stop()
+    "Hey everybody! #{participant} stopped working on #{id}"
 
   retrieve: (participant) ->
     return "I have no timesheet recorded for #{participant}" unless @cache[participant]
