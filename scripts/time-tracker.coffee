@@ -22,19 +22,20 @@ class Timesheets
     effort
 
   startEffort: (effort) ->
-    (@cache[effort.participant] ||= []).push effort
+    ((@cache[effort.participant] ||= {})[effort.id] ||= []).push effort
     effort.start()
     @robot.brain.data.timesheets = @cache
 
   stopEffort: (participant, id) ->
     return "Oops, #{participant} tried to stop #{id} but never started it" unless @cache[participant]?[id]?
-    @cache[participant][id].stop()
+    effort.stop() for effort in @cache[participant][id]
     "Hey everybody! #{participant} stopped working on #{id}"
 
   retrieve: (participant) ->
     return "I have no timesheet recorded for #{participant}" unless @cache[participant]
     """Tracked time for #{participant}:
-      #{(effort.summary() for effort in @cache[participant]).join '\n'}
+      #{for effort_id, efforts of @cache[participant]
+        (effort.summary() for effort in efforts).join '\n'}
     """
 
   clearFor: (participant) ->
@@ -83,19 +84,25 @@ class Effort
 
   timesheets = new Timesheets robot
 
+  participant = (msg) -> msg.message.user.id
+
+  effort_id = (msg) -> msg.match[1]
+
+  participant_and_effort_id = (msg) -> [participant(msg), effort_id(msg)]
+
   robot.respond /show my time(sheet)?/i, (msg) ->
-    msg.send timesheets.retrieve(msg.message.user.id)
+    msg.send timesheets.retrieve(participant msg)
 
   robot.respond /i'm starting (.*)/i, (msg) ->
-    effort_id = msg.match[1]
-    timesheets.add new Effort(msg.message.user.id, effort_id)
-    msg.send "OK, I will track how long you're working on #{effort_id}"
+    timesheets.startEffort new Effort(participant_and_effort_id(msg)...)
+    msg.send "OK, I will track how long you're working on #{effort_id(msg)}"
 
   robot.respond /i'm done with (.*)/i, (msg) ->
+    msg.send timesheets.stopEffort(participant_and_effort_id(msg)...)
 
   robot.respond /(clear|reset) my time(sheet)?/i, (msg) ->
-    timesheets.clearFor(msg.message.user.id)
-    msg.send "OK #{msg.message.user.id}, your timesheet is now reset"
+    timesheets.clearFor(participant msg)
+    msg.send "OK #{participant msg}, your timesheet is now reset"
 
 (exports ? this).Effort = Effort
 (exports ? this).Timesheets = Timesheets

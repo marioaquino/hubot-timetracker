@@ -92,14 +92,14 @@ describe 'Timesheets', ->
       expect(@effort.start).toHaveBeenCalled()
 
     it 'sends the cache to the robot for storage', ->
-      expect(@dataSpy.timesheets['mario'][0]).toEqual(@effort)
+      expect(@dataSpy.timesheets['mario']['1234']).toEqual([@effort])
 
   context 'stopping efforts', ->
     context 'that exist', ->
       beforeEach ->
         @effort = { participant: 'mario', id: '1234', stop: ->}
         spyOn(@effort, 'stop')
-        @timesheets.cache['mario'] = {'1234':  @effort }
+        @timesheets.cache['mario'] = {'1234':  [@effort] }
         @returnValue = @timesheets.stopEffort 'mario', '1234'
 
       it 'stops a running effort', ->
