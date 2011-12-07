@@ -21,7 +21,7 @@ class Timesheets
     effort.ending = new Date(cachedEffort.ending) if cachedEffort.ending?
     effort
 
-  add: (effort) ->
+  startEffort: (effort) ->
     (@cache[effort.participant] ||= []).push effort
     effort.start()
     @robot.brain.data.timesheets = @cache

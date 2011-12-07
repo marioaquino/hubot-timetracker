@@ -78,7 +78,7 @@ describe 'Timesheets', ->
       @timesheets.clearFor('mario')
       expect(@timesheets.retrieve('mario')).toEqual 'I have no timesheet recorded for mario'
 
-  context 'adding efforts', ->
+  context 'starting efforts', ->
     beforeEach ->
       @effort = { participant: 'mario', id: '1234', start: ->}
       spyOn(@effort, 'start')
@@ -86,7 +86,7 @@ describe 'Timesheets', ->
       @mockRobot.brain = brainSpy
       @dataSpy = jasmine.createSpy()
       brainSpy.data = @dataSpy
-      @timesheets.add @effort
+      @timesheets.startEffort @effort
 
     it 'starts the effort', ->
       expect(@effort.start).toHaveBeenCalled()
@@ -100,12 +100,12 @@ describe 'Timesheets', ->
       @mockRobot.brain = brainSpy
       brainSpy.data = jasmine.createSpy()
 
-      @timesheets.add
+      @timesheets.startEffort
         participant: 'mario'
         summary: -> 'Sat Jan 01 2011: 12345 - 2 hours and 30 minutes'
         start: ->
 
-      @timesheets.add
+      @timesheets.startEffort
         participant: 'mario'
         summary: -> 'Sat Jan 01 2011: 54321 - 1 hour'
         start: ->
