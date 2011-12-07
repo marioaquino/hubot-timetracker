@@ -94,6 +94,16 @@ describe 'Timesheets', ->
     it 'sends the cache to the robot for storage', ->
       expect(@dataSpy.timesheets['mario'][0]).toEqual(@effort)
 
+  context 'stopping efforts', ->
+    beforeEach ->
+      @effort = { participant: 'mario', id: '1234', stop: ->}
+      spyOn(@effort, 'stop')
+      @timesheets.cache['mario'] = {'1234':  @effort }
+      @timesheets.stopEffort 'mario', '1234'
+
+    it 'stops a running effort', ->
+      expect(@effort.stop).toHaveBeenCalled()
+
   context 'when efforts are recorded', ->
     beforeEach ->
       brainSpy = jasmine.createSpy()

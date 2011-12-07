@@ -26,6 +26,9 @@ class Timesheets
     effort.start()
     @robot.brain.data.timesheets = @cache
 
+  stopEffort: (participant, id) ->
+    @cache[participant][id].stop()
+
   retrieve: (participant) ->
     return "I have no timesheet recorded for #{participant}" unless @cache[participant]
     """Tracked time for #{participant}:
