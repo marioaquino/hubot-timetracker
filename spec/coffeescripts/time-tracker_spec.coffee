@@ -95,18 +95,22 @@ describe 'Timesheets', ->
       expect(@dataSpy.timesheets['mario'][0]).toEqual(@effort)
 
   context 'stopping efforts', ->
-    beforeEach ->
-      @effort = { participant: 'mario', id: '1234', stop: ->}
-      spyOn(@effort, 'stop')
-      @timesheets.cache['mario'] = {'1234':  @effort }
-      @returnValue = @timesheets.stopEffort 'mario', '1234'
+    context 'that exist', ->
+      beforeEach ->
+        @effort = { participant: 'mario', id: '1234', stop: ->}
+        spyOn(@effort, 'stop')
+        @timesheets.cache['mario'] = {'1234':  @effort }
+        @returnValue = @timesheets.stopEffort 'mario', '1234'
 
-    it 'stops a running effort', ->
-      expect(@effort.stop).toHaveBeenCalled()
+      it 'stops a running effort', ->
+        expect(@effort.stop).toHaveBeenCalled()
 
-    it 'tells you the effort has been stopped', ->
-      expect(@returnValue).toEqual('Hey everybody! mario stopped working on 1234')
+      it 'tells you the effort has been stopped', ->
+        expect(@returnValue).toEqual('Hey everybody! mario stopped working on 1234')
 
+    context 'that do not exist', ->
+      it 'tells you that it doesnt know the effort you told it to stop', ->
+        expect(@timesheets.stopEffort('mario', '1234')).toEqual('Oops, mario tried to stop 1234 but never started it')
 
   context 'when efforts are recorded', ->
     beforeEach ->

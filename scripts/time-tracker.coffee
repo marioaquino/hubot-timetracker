@@ -27,6 +27,7 @@ class Timesheets
     @robot.brain.data.timesheets = @cache
 
   stopEffort: (participant, id) ->
+    return "Oops, #{participant} tried to stop #{id} but never started it" unless @cache[participant]?[id]?
     @cache[participant][id].stop()
     "Hey everybody! #{participant} stopped working on #{id}"
 
