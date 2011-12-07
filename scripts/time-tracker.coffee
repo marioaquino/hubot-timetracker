@@ -69,9 +69,9 @@ class Effort
 
   start: -> @starting = new Date
 
-  stop: -> @ending = new Date
+  stop: -> @ending = new Date if @isRunning()
 
-  endTime: -> @ending or new Date
+  endTime: -> @ending
 
   startTime: -> @starting
 

@@ -26,11 +26,17 @@ describe 'Effort', ->
       expect(@effort.duration()).toEqual '1 minute (*)'
 
     it 'indicates if the effort is running', ->
-      expect(@effort.isRunning()).toEqual true
+      expect(@effort.isRunning()).toBe true
 
     it 'reports its final duration once stopped', ->
       @effort.stop()
       expect(@effort.duration()).toEqual '1 minute'
+
+  context 'stopping', ->
+    it 'can only be be done when an effort is running',  ->
+      spyOn(@effort, 'isRunning').andReturn(false)
+      @effort.stop()
+      expect(@effort.endTime()).toBeUndefined()
 
   context 'duration reporting', ->
     beforeEach ->
