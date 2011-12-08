@@ -84,28 +84,39 @@ describe 'Timesheets', ->
       @timesheets.clearFor('mario')
       expect(@timesheets.retrieve('mario')).toEqual 'I have no timesheet recorded for mario'
 
+  context 'persisting the timesheet cache', ->
+    it 'sends the cache to the robot for storage', ->
+      brainSpy = jasmine.createSpy()
+      @mockRobot.brain = brainSpy
+      dataSpy = jasmine.createSpy()
+      brainSpy.data = dataSpy
+      @timesheets.cache = 'foo'
+
+      @timesheets.persistCache()
+
+      expect(dataSpy.timesheets).toEqual('foo')
+
   context 'starting efforts', ->
     beforeEach ->
       @effort = { participant: 'mario', id: '1234', start: ->}
       spyOn(@effort, 'start')
-      brainSpy = jasmine.createSpy()
-      @mockRobot.brain = brainSpy
-      @dataSpy = jasmine.createSpy()
-      brainSpy.data = @dataSpy
+      spyOn(@timesheets, 'persistCache')
       @timesheets.startEffort @effort
 
     it 'starts the effort', ->
       expect(@effort.start).toHaveBeenCalled()
 
-    it 'sends the cache to the robot for storage', ->
-      expect(@dataSpy.timesheets['mario']['1234']).toEqual([@effort])
+    it 'stores the cache in the robot', ->
+      expect(@timesheets.persistCache).toHaveBeenCalled()
 
   context 'stopping efforts', ->
     context 'that exist', ->
       beforeEach ->
         @effort = { participant: 'mario', id: '1234', stop: ->}
         spyOn(@effort, 'stop')
+        spyOn(@timesheets, 'persistCache')
         @timesheets.cache['mario'] = {'1234':  [@effort] }
+
         @returnValue = @timesheets.stopEffort 'mario', '1234'
 
       it 'stops a running effort', ->
@@ -113,6 +124,9 @@ describe 'Timesheets', ->
 
       it 'tells you the effort has been stopped', ->
         expect(@returnValue).toEqual('Hey everybody! mario stopped working on 1234')
+
+      it 'stores the cache in the robot', ->
+        expect(@timesheets.persistCache).toHaveBeenCalled()
 
     context 'that do not exist', ->
       it 'tells you that it doesnt know the effort you told it to stop', ->
@@ -141,13 +155,12 @@ describe 'Timesheets', ->
 
     context 'clearing the timesheet', ->
       beforeEach ->
+        spyOn(@timesheets, 'persistCache')
         @timesheets.clearFor('mario')
 
       it 'removes all efforts for a given participant', ->
         expect(@timesheets.retrieve('mario')).toEqual 'I have no timesheet recorded for mario'
 
-      it 'updates the robot brain', ->
-        expect(@mockRobot.brain.data.timesheets).toBe(@timesheets.cache)
-
-
+      it 'stores the cache in the robot', ->
+        expect(@timesheets.persistCache).toHaveBeenCalled()
 

@@ -12,8 +12,9 @@ class Timesheets
     @robot.brain.on 'loaded', =>
       if (cachedTimesheets = @robot.brain.data.timesheets)
         console.log "Reloading #{Object.keys(cachedTimesheets).length} previously cached timesheet(s)..."
-        for key of cachedTimesheets
-          @cache[key] = (Timesheets.buildEffort(cachedEffort) for cachedEffort in cachedTimesheets[key])
+        for participant, cachedEfforts of cachedTimesheets
+          for effortId, effortList of cachedEfforts
+            (@cache[participant] ||= {})[effortId] = Timesheets.buildEffort(effort) for effort in effortList
 
   @buildEffort: (cachedEffort) ->
     effort = new Effort(cachedEffort.participant, cachedEffort.id)
@@ -24,11 +25,15 @@ class Timesheets
   startEffort: (effort) ->
     ((@cache[effort.participant] ||= {})[effort.id] ||= []).push effort
     effort.start()
+    @persistCache()
+
+  persistCache: ->
     @robot.brain.data.timesheets = @cache
 
   stopEffort: (participant, id) ->
     return "Oops, #{participant} tried to stop #{id} but never started it" unless @cache[participant]?[id]?
     effort.stop() for effort in @cache[participant][id]
+    @persistCache()
     "Hey everybody! #{participant} stopped working on #{id}"
 
   retrieve: (participant) ->
@@ -39,7 +44,9 @@ class Timesheets
     """
 
   clearFor: (participant) ->
+    return unless @cache[participant]?
     delete @cache[participant]
+    @persistCache()
 
 class Effort
   constructor: (@participant, @id) ->
