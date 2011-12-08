@@ -59,7 +59,7 @@ class Effort
 
   getHours: ->
     return "" unless @startTime?()
-    elapsed = @endTime().getHours() - @startTime().getHours()
+    elapsed = (if @isRunning() then new Date else @endTime()).getHours() - @startTime().getHours()
     return "" unless (elapsed > 0)
     "#{@formatTime(elapsed, 'hour')}"
 
@@ -68,7 +68,7 @@ class Effort
 
   getMinutes: ->
     elapsed = 0 unless @startTime?()
-    elapsed ?= @endTime().getMinutes() - @startTime().getMinutes()
+    elapsed ?= (if @isRunning() then new Date else @endTime()).getMinutes() - @startTime().getMinutes()
     "#{@formatTime(elapsed, 'minute')}#{if @isRunning() then ' (*)' else ''}"
 
   pluralize: (elapsedTime) ->

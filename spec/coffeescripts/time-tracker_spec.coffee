@@ -20,7 +20,6 @@ describe 'Effort', ->
       pastTime = new Date(currentTime)
       pastTime.setMinutes(pastTime.getMinutes() - 1)
       spyOn(@effort, 'startTime').andReturn(pastTime)
-      spyOn(@effort, 'endTime').andReturn(currentTime)
 
     it 'reports the elapsed duration relative to the start date', ->
       expect(@effort.duration()).toEqual '1 minute (*)'
