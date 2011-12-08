@@ -14,7 +14,7 @@ class Timesheets
         console.log "Reloading #{Object.keys(cachedTimesheets).length} previously cached timesheet(s)..."
         for participant, cachedEfforts of cachedTimesheets
           for effortId, effortList of cachedEfforts
-            (@cache[participant] ||= {})[effortId] = Timesheets.buildEffort(effort) for effort in effortList
+            (@cache[participant] ||= {})[effortId] = (Timesheets.buildEffort(effort) for effort in effortList)
 
   @buildEffort: (cachedEffort) ->
     effort = new Effort(cachedEffort.participant, cachedEffort.id)
@@ -85,7 +85,6 @@ class Effort
   isRunning: -> @starting? and not @ending?
 
   summary: -> "#{@startTime().toDateString()}: #{@id} - #{@duration()}"
-
 
 (module ?= {}).exports = (robot) ->
 
